@@ -52,19 +52,9 @@ public class SellerDaoJBDBC implements SellerDao {
 			rs = st.executeQuery();
 			if(rs.next()) {
 				
-				Department dep = new Department();
-				dep.setId(rs.getInt("DepartmentId")); // tem que identico ao atributo criado no banco MYSQL
-				dep.setName(rs.getString("DepName"));
+				Department dep = instantiateDepartment(rs); // foi criada essa função para deixar o codigo melhor estruturado
 				
-				Seller obj = new Seller();  // criando um objeto Seller
-				obj.setId(rs.getInt("Id")); // tem que identico ao atributo criado no banco MYSQL
-				obj.setName(rs.getString("Name")); // tem que identico ao atributo criado no banco MYSQL
-				obj.setEmail(rs.getString("Email")); // tem que identico ao atributo criado no banco MYSQL
-				obj.setBithDate(rs.getDate("BithDay")); // tem que identico ao atributo criado no banco MYSQL
-				obj.setBaseSalary(rs.getDouble("BaseSalary")); // tem que identico ao atributo criado no banco MYSQL
-				obj.setDepartment(dep);	// não pode ser o Id do MYSQL, e sim a referencia de objeto na classe Seller.java
-				//aqui nesse scrip, como foi criado um novo objeto, deve ser incluído a variável que contempla, nesse caso "dep"
-				return obj;
+				Seller obj = instantiateSeller(rs, dep); // foi criada essa função para deixar o codigo melhor estruturado
 			}
 			
 			return null;
@@ -78,6 +68,28 @@ public class SellerDaoJBDBC implements SellerDao {
 			DB.closeResultSet(rs);
 		}
 	}
+
+	private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
+		Seller obj = new Seller();  // criando um objeto Seller
+		obj.setId(rs.getInt("Id")); // tem que identico ao atributo criado no banco MYSQL
+		obj.setName(rs.getString("Name")); // tem que identico ao atributo criado no banco MYSQL
+		obj.setEmail(rs.getString("Email")); // tem que identico ao atributo criado no banco MYSQL
+		obj.setBithDate(rs.getDate("BithDay")); // tem que identico ao atributo criado no banco MYSQL
+		obj.setBaseSalary(rs.getDouble("BaseSalary")); // tem que identico ao atributo criado no banco MYSQL
+		obj.setDepartment(dep);	// não pode ser o Id do MYSQL, e sim a referencia de objeto na classe Seller.java
+		//aqui nesse scrip, como foi criado um novo objeto, deve ser incluído a variável que contempla, nesse caso "dep"
+		return obj;
+		
+	}
+
+
+	private Department instantiateDepartment(ResultSet rs) throws SQLException {
+		Department dep = new Department();
+		dep.setId(rs.getInt("DepartmentId")); // tem que identico ao atributo criado no banco MYSQL
+		dep.setName(rs.getString("DepName"));
+		return null;
+	}
+
 
 	@Override
 	public List<Seller> findAll() {
